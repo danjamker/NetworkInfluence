@@ -125,6 +125,42 @@ public class HBaseMetrics implements IMetrics {
     }
 
     @Override
+    public float get_total_credits_u_v(String u, String v) {
+        double[] numbers = get_credis_u_v(u, v);
+        float sum = 0;
+        for (double i : numbers) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    @Override
+    public double[] get_credis_u_v(String u, String v) {
+        String credis_v_u = "";
+        try {
+            credis_v_u = Bytes.toString(cached.getValue(Bytes.toBytes(Metrics._credit_u_v.toString()), Bytes.toBytes(v)));
+        } catch (Exception e) {
+            credis_v_u = "";
+        }
+
+
+        if (credis_v_u != null) {
+            Collection<Double> credits = Collections2.transform(Arrays.asList(credis_v_u.split("]")), new Function<String, Double>() {
+                @Nullable
+                @Override
+                public Double apply(@Nullable String s) {
+                    return Double.valueOf(s.substring(1, s.length()));
+                }
+            });
+
+            return Doubles.toArray(credits);
+        }
+
+        return new double[0];
+    }
+
+
+    @Override
     public void A_u(String u) {
         A_u(u, 1.0);
     }
@@ -175,6 +211,20 @@ public class HBaseMetrics implements IMetrics {
         }
 
         return A_v_2_u;
+    }
+
+    @Override
+    public float get_global_A_u_2_v(String u, String v) {
+
+        long A_u_2_v;
+
+        try {
+            A_u_2_v = Bytes.toLong(cached.getValue(Bytes.toBytes(Metrics._global_A_u_2_v.toString()), Bytes.toBytes(v)));
+        } catch (Exception e) {
+            A_u_2_v = 0;
+        }
+
+        return A_u_2_v;
     }
 
     @Override
@@ -314,12 +364,52 @@ public class HBaseMetrics implements IMetrics {
     }
 
     @Override
+    public float get_Tau_u_v_credit_u_v(String u, String v) {
+        double[] numbers = get_Tau_u_v_credit_u_v_array(u, v);
+        float sum = 0;
+        for (double i : numbers) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    @Override
+    public double[] get_Tau_u_v_credit_u_v_array(String u, String v) {
+        String credis_v_u = "";
+        try {
+            credis_v_u = Bytes.toString(cached.getValue(Bytes.toBytes(Metrics._Tau_u_v_credit_u_v.toString()), Bytes.toBytes(v)));
+        } catch (Exception e) {
+            credis_v_u = "";
+        }
+
+
+        if (credis_v_u != null) {
+            Collection<Double> credits = Collections2.transform(Arrays.asList(credis_v_u.split("]")), new Function<String, Double>() {
+                @Nullable
+                @Override
+                public Double apply(@Nullable String s) {
+                    return Double.valueOf(s.substring(1, s.length()));
+                }
+            });
+
+            return Doubles.toArray(credits);
+        }
+
+        return new double[0];
+    }
+
+    @Override
     public void A_v_and_u(String u, String v) {
         A_v_and_u(u, v, 1.0);
     }
 
     public float get_A_v_or_u(String u, String v) {
         return get_A_u(u) + get_A_u(v) - get_A_v_and_u(u, v);
+    }
+
+    @Override
+    public float get_A_u_or_v(String u, String v) {
+        return 0;
     }
 
     public float get_A_v_and_u(String u, String v) {
@@ -380,6 +470,11 @@ public class HBaseMetrics implements IMetrics {
             logger.error(e);
         }
         return 0l;
+    }
+
+    @Override
+    public long get_Tau_u_v(String u, String v) {
+        return 0;
     }
 
     @Override

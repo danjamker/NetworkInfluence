@@ -11,6 +11,7 @@ import Network.NoEdgeException;
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import org.apache.commons.math3.analysis.function.Divide;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Append;
 import org.apache.hadoop.hbase.client.Increment;
@@ -35,11 +36,11 @@ public class TrainPhase1 extends IJob  {
 
     private final String table_name;
     private final String input_file, output_dir;
-    private final HBaseConfiguration config;
+    private final Configuration config;
     private JavaSparkContext _jsc;
     private int partitions = 500;
 
-    public TrainPhase1(JavaSparkContext _jsc, final String table_name, final String input_file, String output_dir, final HBaseConfiguration config){
+    public TrainPhase1(JavaSparkContext _jsc, final String table_name, final String input_file, String output_dir, final Configuration config){
         this._jsc = _jsc;
         this.config = config;
         this.input_file = input_file;

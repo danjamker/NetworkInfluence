@@ -37,11 +37,11 @@ public class TrainPhase2 extends IJob  {
 
     private final String table_name;
     private final String input_file, output_dir;
-    private final HBaseConfiguration config;
+    private final Configuration config;
     private JavaSparkContext _jsc;
     private int partitions = 500;
 
-    public TrainPhase2(JavaSparkContext _jsc, final String table_name, final String input_file, String output_dir, final HBaseConfiguration config){
+    public TrainPhase2(JavaSparkContext _jsc, final String table_name, final String input_file, String output_dir, final Configuration config){
         this._jsc = _jsc;
         this.config = config;
         this.input_file = input_file;

@@ -30,12 +30,12 @@ public class StaticTime extends IJob  {
 
     private final String table_name;
     private final String input_file, output_dir;
-    private final HBaseConfiguration config;
+    private final Configuration config;
     private JavaSparkContext _jsc;
     private int partitions = 500;
     private Boolean time = false;
 
-    public StaticTime(JavaSparkContext _jsc, final String table_name, final String input_file, String output_dir, final HBaseConfiguration config){
+    public StaticTime(JavaSparkContext _jsc, final String table_name, final String input_file, String output_dir, final Configuration config){
         this._jsc = _jsc;
         this.config = config;
         this.input_file = input_file;
@@ -97,13 +97,13 @@ public class StaticTime extends IJob  {
                         Double p_v_u = div.value(new Double(_metrics.get_global_A_v_2_u(u, v.getUser())).floatValue(), A_v);
 
                         //Jaccard
-                        Double Jaccard_p_v_u = div.value(new Double(_metrics.get_global_A_v_2_u(u, v.getUser())), new Double(_metrics.get_A_v_or_u(u, v.getUser())));
+                        Double Jaccard_p_v_u = div.value((double) _metrics.get_global_A_v_2_u(u, v.getUser()), (double) _metrics.get_A_v_or_u(u, v.getUser()));
 
                         //Partial credit Bernoulli
-                        Double pcb_p_v_u = div.value(new Double(_metrics.get_total_credits_v_u(u, v.getUser())), A_v);
+                        Double pcb_p_v_u = div.value((double) _metrics.get_total_credits_v_u(u, v.getUser()), A_v);
 
                         //Partial Credit Jaccard
-                        Double pcj_p_v_u = div.value(new Double(_metrics.get_total_credits_v_u(u, v.getUser())), new Double(_metrics.get_A_v_or_u(u, v.getUser())));
+                        Double pcj_p_v_u = div.value((double) _metrics.get_total_credits_v_u(u, v.getUser()), (double) _metrics.get_A_v_or_u(u, v.getUser()));
 
                         if (results_table.containsKey(u)) {
                             results_table.get(u).setP_u(MetricType.Bernoulli, updateProbability(results_table.get(u).getP_u(MetricType.Bernoulli), p_v_u.floatValue()), v.getTime());
@@ -121,7 +121,7 @@ public class StaticTime extends IJob  {
 
                 }
 
-                return results_table.values();
+                return results_table.values().iterator();
             }
         }).flatMapToPair(new PairFlatMapFunction<ResultsRow, String, String>() {
             @Override

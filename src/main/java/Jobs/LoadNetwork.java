@@ -4,6 +4,7 @@ import HBase.Connector;
 import Network.Direction;
 import Network.HBaseNetwork;
 import Network.INetwork;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -23,10 +24,10 @@ public class LoadNetwork extends IJob {
 
     private final String table_name;
     private final String input_file;
-    private final HBaseConfiguration config;
+    private final Configuration config;
     private JavaSparkContext _jsc;
 
-    public LoadNetwork(JavaSparkContext _jsc, final String table_name, final String input_file, final HBaseConfiguration config) {
+    public LoadNetwork(JavaSparkContext _jsc, final String table_name, final String input_file, final Configuration config) {
 
         this._jsc = _jsc;
         this.input_file = input_file;

@@ -3,6 +3,7 @@ package Jobs;
 import HBase.Connector;
 import Network.Direction;
 import Metrics.Metrics;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 
 import java.io.IOException;
@@ -11,10 +12,10 @@ import java.util.List;
 
 public class SetUpHBase extends IJob {
 
-    private final HBaseConfiguration config;
+    private final Configuration config;
     private String table_name;
 
-    public SetUpHBase(final HBaseConfiguration config, String table_name){
+    public SetUpHBase(final Configuration config, String table_name){
         this.config = config;
         this.table_name = table_name;
     }
