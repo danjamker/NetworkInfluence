@@ -18,11 +18,11 @@ public class Runner {
                 .setAppName("NetworkInfluence");
         final JavaSparkContext _jsc = new JavaSparkContext(_sc);
 
-        Configuration config = HBaseConfiguration.create();
-
-        new SetUpHBase(config, table_name).invoke();
-
-        new LoadNetwork(_jsc, table_name, input_file, config).invoke();
+//        Configuration config = HBaseConfiguration.create();
+//
+//        new SetUpHBase(config, table_name).invoke();
+//
+//        new LoadNetwork(_jsc, table_name, input_file, config).invoke();
 
     }
 }

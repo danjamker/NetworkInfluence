@@ -49,11 +49,12 @@ public class TrainPhase1 extends IJob  {
 
     @Override
     public void invoke() throws IOException {
+
         JavaPairRDD<Tuple3<Metrics, String, String>, Double> reduced_values = _jsc
                 .wholeTextFiles(input_file, partitions)
                 .flatMapToPair(new PairFlatMapFunction<Tuple2<String, String>, Tuple3<Metrics, String, String>, Double>() {
             @Override
-            public Iterable<Tuple2<Tuple3<Metrics, String, String>, Double>> call(Tuple2<String, String> stringStringTuple2) throws IOException, NoEdgeException {
+            public Iterator<Tuple2<Tuple3<Metrics, String, String>, Double>> call(Tuple2<String, String> stringStringTuple2) throws Exception, NoEdgeException {
 
                 Connector hb = new Connector.HBaseBuilder().setOverwrite(false).setTableName(table_name).setConfig(config).createHBase();
 
@@ -64,7 +65,7 @@ public class TrainPhase1 extends IJob  {
                 Divide div = new Divide();
                 final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
 
-                Collection<Row> rows_tmp = Collections2.transform(Lists.fromArray(stringStringTuple2._2().split("\n")), new Function<String, Row>() {
+                Collection<Row> rows_tmp = Collections2.transform(Arrays.asList(stringStringTuple2._2().split("\n")), new Function<String, Row>() {
                     @Nullable
                     @Override
                     public Row apply(@Nullable String s) {
@@ -118,7 +119,7 @@ public class TrainPhase1 extends IJob  {
                 }
 
                 hb.close();
-                return _metrics.toList();
+                return _metrics.toList().iterator();
             }
         }).reduceByKey(new Function2<Double, Double, Double>() {
             @Override
@@ -147,7 +148,6 @@ public class TrainPhase1 extends IJob  {
                     if (tmp._1()._1() == Metrics._Tau_v_u_credit_v_u || tmp._1()._1() == Metrics._credit_u_v || tmp._1()._1() == Metrics._Tau_u_v_credit_u_v || tmp._1()._1() == Metrics._credit_v_u) {
                         Append a = new Append(Bytes.toBytes(tmp._1()._2()));
                         for (Tuple2<String, Double> t : tmp._2) {
-                            //TODO generate row
                             a.add(Bytes.toBytes(tmp._1._1.toString()), Bytes.toBytes(t._1()), Bytes.toBytes("[" + t._2().floatValue() + "]"));
                         }
 
@@ -213,7 +213,6 @@ public class TrainPhase1 extends IJob  {
 
 
                         for (Tuple2<String, Double> t : tmp._2) {
-                            //TODO generate row
                             i.addColumn(Bytes.toBytes(tmp._1._1.toString()), Bytes.toBytes(t._1()), t._2().longValue());
                         }
 

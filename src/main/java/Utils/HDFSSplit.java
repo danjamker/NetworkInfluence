@@ -20,12 +20,12 @@ public class HDFSSplit {
 
     public static void main(String[] args) throws Exception {
 
-        try {
-            trainTestSplit(input, output);
-        }
-        catch (Exception e){
-            logger.info(e);
-        }
+//        try {
+//            trainTestSplit(input, output);
+//        }
+//        catch (Exception e){
+//            logger.info(e);
+//        }
 
 
     }
