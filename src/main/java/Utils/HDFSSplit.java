@@ -20,19 +20,22 @@ public class HDFSSplit {
 
     public static void main(String[] args) throws Exception {
 
-//        try {
-//            trainTestSplit(input, output);
-//        }
-//        catch (Exception e){
-//            logger.info(e);
-//        }
+        String input = "";
+        String output = "";
+        String HDFSURI = "";
+        try {
+            trainTestSplit(input, output, HDFSURI);
+        }
+        catch (Exception e){
+            logger.info(e);
+        }
 
 
     }
 
-    private static void trainTestSplit(String input, String output) throws IOException, URISyntaxException {
+    private static void trainTestSplit(String input, String output, String HDFSURI) throws IOException, URISyntaxException {
         Configuration configuration = new Configuration();
-        FileSystem fs = FileSystem.get(new URI("hdfs://scc-culture-mind.lancs.ac.uk"), configuration);
+        FileSystem fs = FileSystem.get(new URI(HDFSURI), configuration);
         FileStatus[] status = fs.listStatus(new Path(input));  // you need to pass in your hdfs path
 
         List<FileStatus> files = new LinkedList<FileStatus>(Arrays.asList(status));
@@ -66,18 +69,18 @@ public class HDFSSplit {
         return copy.subList(0, n);
     }
 
-    public static void tagsplit(String input, String output) throws IOException, URISyntaxException {
-        List<String> tmp = splitOnSuffix(input, output);
+    public static void tagsplit(String input, String output, String HDFSURI) throws IOException, URISyntaxException {
+        List<String> tmp = splitOnSuffix(input, output, HDFSURI);
 
         for (String s : tmp) {
-            trainTestSplit(s, output + "-split");
+            trainTestSplit(s, output + "-split", HDFSURI);
         }
     }
 
-    public static List<String> splitOnSuffix(String input, String output) throws IOException, URISyntaxException {
+    public static List<String> splitOnSuffix(String input, String output, String HDFSURI) throws IOException, URISyntaxException {
 
         Configuration configuration = new Configuration();
-        FileSystem fs = FileSystem.get(new URI("hdfs://scc-culture-mind.lancs.ac.uk"), configuration);
+        FileSystem fs = FileSystem.get(new URI(HDFSURI), configuration);
         FileStatus[] status = fs.listStatus(new Path(input));  // you need to pass in your hdfs path
 
         List<String> newdir = new ArrayList<String>();
