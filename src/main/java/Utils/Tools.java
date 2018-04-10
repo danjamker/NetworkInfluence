@@ -1,5 +1,6 @@
 package Utils;
 
+import Jobs.Row;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -7,9 +8,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import scala.Tuple2;
 import scala.Tuple3;
@@ -111,6 +110,22 @@ public class Tools {
         r_list.add(new Tuple2<Tuple3<Metrics, String, String>, Double>(new Tuple3<Metrics, String, String>(name, u, name.toString()), value));
 
         return r_list;
+    }
+
+    public static List<Row> firstInstances(List<Row> rows) {
+        Collection<Row> rows_tmp;
+        rows_tmp = new ArrayList<Row>();
+        Set<String> addedusers = new HashSet<String>();
+        for (Row r : rows) {
+            if (!addedusers.contains(r.getUser())) {
+                rows_tmp.add(r);
+                addedusers.add(r.getUser());
+            }
+        }
+
+        rows = new ArrayList<Row>(rows_tmp);
+        Collections.sort(rows);
+        return rows;
     }
 
 }
