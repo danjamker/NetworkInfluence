@@ -11,7 +11,7 @@ public class Runner {
         String table_name = "";
         String input_file = "";
         String output_file = "";
-
+        String network_file = "";
         SparkConf _sc;
         _sc = new SparkConf()
                 .setMaster("local")
@@ -23,7 +23,7 @@ public class Runner {
 
         new SetUpHBase(config, table_name).invoke();
 
-        new LoadNetwork(_jsc, table_name, input_file, config).invoke();
+        new LoadNetwork(_jsc, network_file, input_file, config).invoke();
 
         new LoadAu(_jsc, table_name, input_file, output_file, config).invoke();
 
